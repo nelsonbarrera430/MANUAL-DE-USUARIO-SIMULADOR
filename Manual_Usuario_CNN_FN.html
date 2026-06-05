@@ -1,0 +1,1568 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual de Usuario — CNN_FN Simulador de Conducción</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --navy:   #0c1445;
+  --navy2:  #111966;
+  --indigo: #4338ca;
+  --indigo2:#6366f1;
+  --rose:   #f43f5e;
+  --rose2:  #fda4af;
+  --teal:   #0d9488;
+  --teal2:  #2dd4bf;
+  --amber:  #d97706;
+  --bg:     #f9fafb;
+  --white:  #ffffff;
+  --text:   #111827;
+  --text2:  #6b7280;
+  --text3:  #9ca3af;
+  --border: #e5e7eb;
+  --border2:#d1d5db;
+  --surface:#f3f4f6;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14.5px;
+  line-height: 1.75;
+}
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--indigo); border-radius: 10px; }
+
+/* ── PORTADA ── */
+.cover {
+  min-height: 100vh;
+  background: var(--navy);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+.cover-bg-shape {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 70% 40%, rgba(99,102,241,0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 20% 80%, rgba(244,63,94,0.12) 0%, transparent 55%);
+}
+.cover-lines {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+.cover-stripe {
+  position: absolute;
+  top: 0; right: 120px;
+  width: 3px;
+  height: 100%;
+  background: linear-gradient(180deg, transparent, rgba(99,102,241,0.6), transparent);
+}
+.cover-stripe2 {
+  position: absolute;
+  top: 0; right: 240px;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(180deg, transparent, rgba(244,63,94,0.3), transparent);
+}
+
+.cover-content {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px 100px;
+  max-width: 800px;
+}
+
+.cover-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--indigo2);
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.cover-eyebrow::before {
+  content: '';
+  display: block;
+  width: 32px;
+  height: 1px;
+  background: var(--indigo2);
+}
+
+.cover h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(52px, 7vw, 80px);
+  font-weight: 800;
+  line-height: 0.95;
+  color: #fff;
+  letter-spacing: -2px;
+  margin-bottom: 24px;
+}
+.cover h1 .line2 {
+  display: block;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(255,255,255,0.35);
+}
+.cover h1 .accent { color: var(--rose); }
+
+.cover-desc {
+  font-size: 16px;
+  color: rgba(255,255,255,0.45);
+  max-width: 460px;
+  margin-bottom: 52px;
+  line-height: 1.6;
+}
+
+.cover-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 60px;
+}
+.cover-tag {
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.55);
+  padding: 7px 16px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.cover-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: rgba(255,255,255,0.2);
+  letter-spacing: 2px;
+}
+
+.cover-badge {
+  position: absolute;
+  bottom: 60px;
+  right: 80px;
+  z-index: 2;
+  text-align: right;
+}
+.cover-badge-circle {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  border: 1px solid rgba(99,102,241,0.4);
+  background: rgba(99,102,241,0.1);
+  backdrop-filter: blur(10px);
+}
+.cover-badge-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--indigo2);
+  line-height: 1;
+}
+.cover-badge-lbl {
+  font-size: 10px;
+  color: rgba(255,255,255,0.35);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+/* ── TOC ── */
+.toc-wrap {
+  max-width: 860px;
+  margin: 48px auto;
+  padding: 0 24px;
+}
+.toc-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.toc-header {
+  background: var(--navy);
+  padding: 22px 32px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.toc-header-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.9);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+.toc-body { padding: 8px 0; }
+.toc-item {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 0;
+  text-decoration: none;
+  color: var(--text2);
+  border-bottom: 1px solid var(--border);
+  transition: all 0.15s;
+}
+.toc-item:last-child { border-bottom: none; }
+.toc-item:hover { color: var(--indigo); }
+.toc-item:hover .toc-n { background: var(--indigo); color: white; }
+.toc-n {
+  width: 54px;
+  padding: 13px 0;
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--indigo2);
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+.toc-label {
+  padding: 13px 20px;
+  font-size: 13.5px;
+  font-weight: 500;
+  flex: 1;
+}
+
+/* ── PÁGINAS ── */
+.page-wrap {
+  max-width: 860px;
+  margin: 0 auto 32px;
+  padding: 0 24px;
+}
+.page {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.page-top {
+  height: 3px;
+  background: linear-gradient(90deg, var(--indigo), var(--rose));
+}
+
+.page-header {
+  padding: 36px 44px 28px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+}
+.page-num-block {
+  flex-shrink: 0;
+}
+.page-num-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--indigo2);
+  display: block;
+  margin-bottom: 6px;
+}
+.page-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--navy);
+  line-height: 1.15;
+  letter-spacing: -0.5px;
+}
+.page-subtitle {
+  font-size: 13px;
+  color: var(--text3);
+  margin-top: 5px;
+}
+
+.page-body { padding: 36px 44px 44px; }
+
+h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--navy);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin: 36px 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+h3::before {
+  content: '';
+  display: block;
+  width: 3px;
+  height: 16px;
+  background: var(--indigo);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+h4 {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--indigo2);
+  margin: 22px 0 10px;
+}
+
+p { color: var(--text2); margin-bottom: 12px; font-size: 14px; line-height: 1.75; }
+strong { color: var(--text); font-weight: 600; }
+
+/* ── ALERTAS ── */
+.alert {
+  padding: 14px 18px 14px 22px;
+  margin: 18px 0;
+  font-size: 13.5px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  border-radius: 2px;
+}
+.alert-info   { background: #eef2ff; border-left: 3px solid var(--indigo); }
+.alert-warn   { background: #fff7ed; border-left: 3px solid var(--amber); }
+.alert-ok     { background: #f0fdf4; border-left: 3px solid var(--teal); }
+.alert-danger { background: #fff1f2; border-left: 3px solid var(--rose); }
+.alert-sym {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.alert-info   .alert-sym { color: var(--indigo2); }
+.alert-warn   .alert-sym { color: var(--amber); }
+.alert-ok     .alert-sym { color: var(--teal); }
+.alert-danger .alert-sym { color: var(--rose); }
+.alert-text { color: var(--text); line-height: 1.65; }
+.alert-text strong { color: var(--navy); }
+
+/* ── STEPS ── */
+.steps { list-style: none; margin: 18px 0; }
+.steps li {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  margin-bottom: 14px;
+}
+.step-n {
+  width: 28px; height: 28px;
+  background: var(--navy);
+  color: white;
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.step-text { color: var(--text2); font-size: 14px; flex: 1; padding-top: 4px; line-height: 1.7; }
+.step-text strong { color: var(--text); }
+
+/* ── IMÁGENES ── */
+.img-block { margin: 24px 0; }
+.img-block img {
+  width: 100%;
+  display: block;
+  border: 1px solid var(--border2);
+  border-radius: 2px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+}
+.img-caption {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text3);
+  margin-top: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.3px;
+}
+.img-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0; }
+.img-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 24px 0; }
+.img-grid-2 img, .img-grid-3 img {
+  width: 100%; height: 200px; object-fit: cover;
+  display: block;
+  border: 1px solid var(--border2);
+  border-radius: 2px;
+}
+
+/* ── CONTROLES ── */
+.key-section { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0; }
+.key-group {
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.key-group-header {
+  background: var(--navy);
+  padding: 12px 18px;
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.85);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.key-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 18px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.key-row:last-child { border-bottom: none; }
+.key-row .desc { color: var(--text2); flex: 1; }
+kbd {
+  background: var(--navy);
+  color: rgba(255,255,255,0.9);
+  padding: 3px 9px;
+  border-radius: 3px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  box-shadow: 0 2px 0 rgba(0,0,0,0.3);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ── MARCHAS ── */
+.gear-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 6px; margin: 16px 0; }
+.gear-box {
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 10px 6px;
+  text-align: center;
+  background: var(--surface);
+}
+.gear-box.fwd  { border-top: 3px solid var(--indigo); }
+.gear-box.rev  { border-top: 3px solid var(--rose); }
+.gear-box.neut { border-top: 3px solid var(--text3); }
+.gear-n   { font-family:'Syne',sans-serif; font-size:18px; font-weight:800; color:var(--navy); }
+.gear-sp  { font-size:10px; color:var(--text3); margin-top:2px; }
+.gear-key { display:inline-block; background:var(--navy); color:white; font-size:10px; padding:1px 6px; border-radius:2px; margin-top:4px; font-family:'JetBrains Mono',monospace; }
+
+/* ── MODOS ── */
+.mode-cards { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:20px 0; }
+.mode-card {
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.mode-card-top {
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.mode-card-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.mode-card-libre   .mode-card-label { color: var(--indigo2); }
+.mode-card-rural   .mode-card-label { color: var(--teal); }
+.mode-card-cale    .mode-card-label { color: var(--amber); }
+.mode-card-parqueo .mode-card-label { color: var(--rose); }
+.mode-card-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--navy);
+}
+.mode-card-body { padding: 14px 20px; }
+.mode-card-body p { margin: 0; font-size: 13px; }
+
+/* ── TABLA DE INFRACCIONES ── */
+.inf-list { margin: 16px 0; }
+.inf-item {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-bottom: none;
+  font-size: 13px;
+}
+.inf-item:first-child { border-radius: 2px 2px 0 0; }
+.inf-item:last-child  { border-bottom: 1px solid var(--border); border-radius: 0 0 2px 2px; }
+.inf-sev {
+  width: 5px;
+  align-self: stretch;
+  flex-shrink: 0;
+}
+.inf-sev.grave  { background: var(--rose); }
+.inf-sev.media  { background: var(--amber); }
+.inf-sev.leve   { background: var(--indigo2); }
+.inf-sev.menor  { background: var(--teal); }
+.inf-name { flex: 1; padding: 11px 16px; color: var(--text); font-weight: 500; }
+.inf-desc { flex: 2; padding: 11px 16px; color: var(--text2); border-left: 1px solid var(--border); }
+.inf-pts {
+  padding: 11px 16px;
+  font-family: 'Syne', sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  min-width: 68px;
+  text-align: right;
+  border-left: 1px solid var(--border);
+}
+.inf-pts.pts-grave  { color: var(--rose); }
+.inf-pts.pts-media  { color: var(--amber); }
+.inf-pts.pts-leve   { color: var(--indigo2); }
+.inf-pts.pts-menor  { color: var(--teal); }
+
+/* ── PUNTAJE ── */
+.score-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+.score-card {
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.score-top {
+  padding: 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+}
+.score-range-n {
+  font-family: 'Syne', sans-serif;
+  font-size: 36px;
+  font-weight: 900;
+  line-height: 1;
+}
+.score-range-label {
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+.s-excelente .score-range-n, .s-excelente .score-range-label { color: var(--teal); }
+.s-bueno     .score-range-n, .s-bueno .score-range-label     { color: var(--indigo); }
+.s-regular   .score-range-n, .s-regular .score-range-label   { color: var(--amber); }
+.s-def       .score-range-n, .s-def .score-range-label       { color: var(--rose); }
+.score-desc { padding: 12px 20px; font-size: 12px; color: var(--text3); }
+
+/* ── TABLA ── */
+.table-wrap { overflow-x: auto; margin: 16px 0; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+thead tr { background: var(--navy); }
+th {
+  padding: 11px 14px;
+  text-align: left;
+  color: rgba(255,255,255,0.85);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text2); vertical-align: top; }
+tr:hover td { background: #f9fafb; }
+tr:last-child td { border-bottom: none; }
+td strong { color: var(--text); font-weight: 600; }
+
+/* ── FAQ ── */
+.faq-item { border: 1px solid var(--border); border-radius: 2px; margin: 10px 0; overflow: hidden; }
+.faq-q {
+  padding: 15px 20px;
+  background: var(--surface);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--navy);
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.faq-q-mark {
+  background: var(--navy);
+  color: white;
+  font-family: 'Syne', sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.faq-a {
+  padding: 14px 20px;
+  font-size: 13.5px;
+  color: var(--text2);
+  line-height: 1.7;
+  border-top: 1px dashed var(--border);
+  display: flex;
+  gap: 12px;
+}
+.faq-a-mark {
+  background: var(--teal);
+  color: white;
+  font-family: 'Syne', sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* ── GLOSARIO ── */
+.glosario { margin: 16px 0; }
+.glosario-item {
+  display: flex;
+  gap: 20px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+}
+.glosario-item:last-child { border-bottom: none; }
+.glosario-term {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+  color: var(--indigo2);
+  min-width: 200px;
+  flex-shrink: 0;
+  font-size: 13px;
+}
+.glosario-def { color: var(--text2); }
+
+/* ── CHECKLIST ── */
+.checklist { list-style: none; margin: 14px 0; }
+.checklist li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 9px 0;
+  border-bottom: 1px dashed var(--border);
+  font-size: 14px;
+  color: var(--text2);
+}
+.checklist li:last-child { border-bottom: none; }
+.checklist li::before {
+  content: '→';
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--indigo2);
+  flex-shrink: 0;
+  font-weight: 700;
+}
+
+/* ── DIVIDER ── */
+hr.div { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+
+/* ── FOOTER ── */
+.footer-wrap { max-width: 860px; margin: 0 auto 80px; padding: 0 24px; }
+.footer {
+  background: var(--navy);
+  padding: 40px;
+  text-align: center;
+}
+.footer-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: white;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+.footer-sub { font-size: 12px; color: rgba(255,255,255,0.3); font-family: 'JetBrains Mono', monospace; letter-spacing: 1px; }
+
+@media (max-width: 700px) {
+  .cover-content { padding: 60px 32px; }
+  .cover-badge { display: none; }
+  .page-header { flex-direction: column; }
+  .page-body { padding: 28px 24px 36px; }
+  .key-section, .mode-cards, .img-grid-2, .score-grid { grid-template-columns: 1fr; }
+  .img-grid-3 { grid-template-columns: 1fr 1fr; }
+  .gear-grid { grid-template-columns: repeat(4,1fr); }
+  .inf-desc { display: none; }
+}
+@media print {
+  .cover { min-height: auto; page-break-after: always; }
+  .page { page-break-inside: avoid; box-shadow: none; margin-bottom: 20px; }
+  body { background: white; }
+}
+</style>
+</head>
+<body>
+
+<!-- PORTADA -->
+<div class="cover">
+  <div class="cover-bg-shape"></div>
+  <div class="cover-lines"></div>
+  <div class="cover-stripe"></div>
+  <div class="cover-stripe2"></div>
+
+  <div class="cover-content">
+    <div class="cover-eyebrow">Manual Oficial de Usuario</div>
+    <h1>Simulador<br><span class="line2">de Conducción</span><br><span class="accent">CNN_FN</span></h1>
+    <p class="cover-desc">Guía completa para conductores en formación — controles, modos de práctica, infracciones y puntaje.</p>
+    <div class="cover-tags">
+      <span class="cover-tag">4 Modos</span>
+      <span class="cover-tag">3 Climas</span>
+      <span class="cover-tag">Logitech G27</span>
+      <span class="cover-tag">Puntaje en tiempo real</span>
+      <span class="cover-tag">Resultados en la nube</span>
+    </div>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-bottom:20px;">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.2);text-transform:uppercase;">Desarrollado por</span>
+      <span style="font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:rgba(255,255,255,0.7);">Nelson Barrera</span>
+      <span style="color:rgba(255,255,255,0.15);">·</span>
+      <span style="font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:rgba(255,255,255,0.7);">Julian Dorado</span>
+      <span style="color:rgba(255,255,255,0.15);">·</span>
+      <span style="font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:rgba(255,255,255,0.7);">Cristian Ruano</span>
+    </div>
+    <div class="cover-meta">V 1.0.0 — 2026 — UNITY 2022 LTS</div>
+  </div>
+
+  <div class="cover-badge">
+    <div class="cover-badge-circle">
+      <div class="cover-badge-num">14</div>
+      <div class="cover-badge-lbl">Secciones</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- TOC -->
+<div class="toc-wrap">
+  <div class="toc-card">
+    <div class="toc-header">
+      <div class="toc-header-title">Tabla de Contenidos</div>
+    </div>
+    <div class="toc-body">
+      <a class="toc-item" href="#s1"><div class="toc-n">01</div><div class="toc-label">Qué es el Simulador CNN_FN</div></a>
+      <a class="toc-item" href="#s2"><div class="toc-n">02</div><div class="toc-label">Requisitos del Sistema</div></a>
+      <a class="toc-item" href="#s3"><div class="toc-n">03</div><div class="toc-label">Primer Acceso — Login y Registro</div></a>
+      <a class="toc-item" href="#s4"><div class="toc-n">04</div><div class="toc-label">Seleccionar Modo y Clima</div></a>
+      <a class="toc-item" href="#s5"><div class="toc-n">05</div><div class="toc-label">Controles — Teclado y Logitech G27</div></a>
+      <a class="toc-item" href="#s6"><div class="toc-n">06</div><div class="toc-label">Modo Libre</div></a>
+      <a class="toc-item" href="#s7"><div class="toc-n">07</div><div class="toc-label">Modo Rural</div></a>
+      <a class="toc-item" href="#s8"><div class="toc-n">08</div><div class="toc-label">Modo Cale</div></a>
+      <a class="toc-item" href="#s9"><div class="toc-n">09</div><div class="toc-label">Modo Estacionamiento</div></a>
+      <a class="toc-item" href="#s10"><div class="toc-n">10</div><div class="toc-label">Infracciones y Penalizaciones</div></a>
+      <a class="toc-item" href="#s11"><div class="toc-n">11</div><div class="toc-label">Tu Puntaje y Calificación</div></a>
+      <a class="toc-item" href="#s12"><div class="toc-n">12</div><div class="toc-label">Consejos para Mejorar</div></a>
+      <a class="toc-item" href="#s13"><div class="toc-n">13</div><div class="toc-label">Preguntas Frecuentes</div></a>
+      <a class="toc-item" href="#s14"><div class="toc-n">14</div><div class="toc-label">Glosario</div></a>
+    </div>
+  </div>
+</div>
+
+
+<!-- S1 -->
+<div class="page-wrap" id="s1">
+<div class="page">
+<div class="page-top"></div>
+<div class="page-header">
+  <div class="page-num-block">
+    <span class="page-num-tag">Sección 01</span>
+    <div class="page-title">Qué es el Simulador CNN_FN</div>
+    <div class="page-subtitle">Plataforma virtual de práctica y evaluación de conducción</div>
+  </div>
+</div>
+<div class="page-body">
+
+<p>El <strong>Simulador CNN_FN</strong> es una aplicación 3D que recrea entornos viales reales donde practicas tu manejo y eres evaluado de forma objetiva. Detecta infracciones en tiempo real, lleva registro de tu puntaje y guarda los resultados en la nube vinculados a tu cédula.</p>
+
+<div class="alert alert-info">
+  <div class="alert-sym">i</div>
+  <div class="alert-text"><strong>Herramienta de evaluación oficial:</strong> Este no es un videojuego. Tus resultados quedan almacenados en base de datos y son revisados por tus instructores. Cada sesión queda registrada con las infracciones cometidas.</div>
+</div>
+
+<h3>Qué puedes practicar</h3>
+<div class="mode-cards">
+  <div class="mode-card mode-card-libre">
+    <div class="mode-card-top">
+      <div class="mode-card-label">Modo 01</div>
+      <div class="mode-card-title">Libre</div>
+    </div>
+    <div class="mode-card-body"><p>Navega libremente por la ciudad. Sin ruta obligatoria — el objetivo es llegar a la zona de finalización respetando todas las normas.</p></div>
+  </div>
+  <div class="mode-card mode-card-rural">
+    <div class="mode-card-top">
+      <div class="mode-card-label">Modo 02</div>
+      <div class="mode-card-title">Rural</div>
+    </div>
+    <div class="mode-card-body"><p>Carretera interurbana de doble carril con tráfico pesado. Altas velocidades y señales de no adelantar.</p></div>
+  </div>
+  <div class="mode-card mode-card-cale">
+    <div class="mode-card-top">
+      <div class="mode-card-label">Modo 03</div>
+      <div class="mode-card-title">Cale</div>
+    </div>
+    <div class="mode-card-body"><p>Ciudad con tráfico IA completo: semáforos, peatones, conos, topes y vehículos autónomos. El más exigente.</p></div>
+  </div>
+  <div class="mode-card mode-card-parqueo">
+    <div class="mode-card-top">
+      <div class="mode-card-label">Modo 04</div>
+      <div class="mode-card-title">Estacionamiento</div>
+    </div>
+    <div class="mode-card-body"><p>Maniobras de parqueo paralelo y en reversa. Evaluación de precisión y número de maniobras.</p></div>
+  </div>
+</div>
+
+<h3>Cómo funciona la evaluación</h3>
+<ol class="steps">
+  <li><div class="step-n">1</div><div class="step-text">Cada infracción genera una <strong>alerta en pantalla</strong> con la descripción de la falta cometida.</div></li>
+  <li><div class="step-n">2</div><div class="step-text">El sistema <strong>descuenta puntos</strong> automáticamente (el puntaje inicial es 100).</div></li>
+  <li><div class="step-n">3</div><div class="step-text">Al finalizar, todos los datos se envían a la <strong>base de datos</strong> vinculados a tu cédula.</div></li>
+</ol>
+
+</div>
+</div>
+</div>
+
+
+<!-- S2 -->
+<div class="page-wrap" id="s2">
+<div class="page">
+<div class="page-top"></div>
+<div class="page-header">
+  <div class="page-num-block">
+    <span class="page-num-tag">Sección 02</span>
+    <div class="page-title">Requisitos del Sistema</div>
+    <div class="page-subtitle">Hardware y software necesario para ejecutar el simulador</div>
+  </div>
+</div>
+<div class="page-body">
+
+<div class="table-wrap"><table>
+  <thead><tr><th>Componente</th><th>Mínimo</th><th>Recomendado</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Sistema Operativo</strong></td><td>Windows 10 (64-bit)</td><td>Windows 11 (64-bit)</td></tr>
+    <tr><td><strong>RAM</strong></td><td>8 GB</td><td>16 GB o más</td></tr>
+    <tr><td><strong>Tarjeta Gráfica</strong></td><td>GTX 1050 / RX 570</td><td>RTX 3060 / RX 6700</td></tr>
+    <tr><td><strong>Almacenamiento</strong></td><td>25 GB libres</td><td>SSD con 30 GB+</td></tr>
+    <tr><td><strong>Motor Unity</strong></td><td>2022.3 LTS</td><td>2022.3 LTS</td></tr>
+    <tr><td><strong>Internet</strong></td><td>Requerido (login y guardado)</td><td>Conexión estable</td></tr>
+    <tr><td><strong>Periférico</strong></td><td>Teclado y ratón</td><td>Logitech G27</td></tr>
+  </tbody>
+</table></div>
+
+<div class="alert alert-warn">
+  <div class="alert-sym">!</div>
+  <div class="alert-text"><strong>Internet requerido:</strong> El simulador necesita conexión para validar tu cédula al entrar y para guardar resultados al terminar. Sin conexión no podrás iniciar ni guardar tu evaluación.</div>
+</div>
+
+<h3>Abrir el simulador</h3>
+<ol class="steps">
+  <li><div class="step-n">1</div><div class="step-text">Abre <strong>Unity Hub</strong> en tu computadora.</div></li>
+  <li><div class="step-n">2</div><div class="step-text">Selecciona el proyecto <strong>CNN_FN</strong> y espera que cargue (puede tardar unos minutos la primera vez).</div></li>
+  <li><div class="step-n">3</div><div class="step-text">Con la escena <code>01_LOGIN</code> activa, presiona <strong>Play ▶</strong>.</div></li>
+  <li><div class="step-n">4</div><div class="step-text">Si tienes el <strong>Logitech G27</strong>, conéctalo antes de abrir Unity para que sea detectado automáticamente.</div></li>
+</ol>
+
+</div>
+</div>
+</div>
+
+
+<!-- S3 -->
+<div class="page-wrap" id="s3">
+<div class="page">
+<div class="page-top"></div>
+<div class="page-header">
+  <div class="page-num-block">
+    <span class="page-num-tag">Sección 03</span>
+    <div class="page-title">Primer Acceso — Login y Registro</div>
+    <div class="page-subtitle">Cómo identificarte con tu cédula</div>
+  </div>
+</div>
+<div class="page-body">
+
+<div class="img-block">
+  <img src="img_docs/login.png.png" alt="Pantalla de Login">
+  <div class="img-caption">PANTALLA DE INICIO — Ingresa tu cédula para acceder al simulador</div>
+</div>
+
+<h3>Si ya tienes cuenta — Ingresar</h3>
+<ol class="steps">
+  <li><div class="step-n">1</div><div class="step-text">Escribe tu <strong>número de cédula</strong> en el campo de texto.</div></li>
+  <li><div class="step-n">2</div><div class="step-text">Haz clic en <strong>INGRESAR</strong>.</div></li>
+  <li><div class="step-n">3</div><div class="step-text">Espera la respuesta del servidor. La primera vez del día puede tardar hasta <strong>90 segundos</strong> — el servidor se despierta desde reposo, es normal.</div></li>
+  <li><div class="step-n">4</div><div class="step-text">Con cédula correcta, pasas al menú de selección.</div></li>
+</ol>
+
+<div class="alert alert-info">
+  <div class="alert-sym">i</div>
+  <div class="alert-text"><strong>Por qué tarda la primera vez:</strong> El servidor usa un plan gratuito en la nube que "se duerme" al no haber actividad. Al enviar la primera solicitud del día, el servidor se despierta. Los intentos siguientes son inmediatos.</div>
+</div>
+
+<h3>Si es tu primera vez — Registrarse</h3>
+<ol class="steps">
+  <li><div class="step-n">1</div><div class="step-text">Haz clic en <strong>REGISTRAR</strong>.</div></li>
+  <li><div class="step-n">2</div><div class="step-text">Ingresa tu <strong>número de cédula</strong>.</div></li>
+  <li><div class="step-n">3</div><div class="step-text">Confirma el registro. Tu cédula queda guardada en la base de datos.</div></li>
+  <li><div class="step-n">4</div><div class="step-text">A partir de este momento puedes ingresar con esa cédula.</div></li>
+</ol>
+
+<div class="alert alert-danger">
+  <div class="alert-sym">!</div>
+  <div class="alert-text"><strong>Tu cédula es tu identificador único.</strong> Todos tus resultados e infracciones quedan vinculados a ella. No la compartas — los resultados de otros quedarán en tu historial.</div>
+</div>
+
+</div>
+</div>
+</div>
+
+
+<!-- S4 -->
+<div class="page-wrap" id="s4">
+<div class="page">
+<div class="page-top"></div>
+<div class="page-header">
+  <div class="page-num-block">
+    <span class="page-num-tag">Sección 04</span>
+    <div class="page-title">Seleccionar Modo y Clima</div>
+    <div class="page-subtitle">Elige tu práctica antes de iniciar la conducción</div>
+  </div>
+</div>
+<div class="page-body">
+
+<div class="img-block">
+  <img src="img_docs/menu.png.png" alt="Menú de selección">
+  <div class="img-caption">PANTALLA DE MENÚ — Selecciona el modo y las condiciones climáticas</div>
+</div>
+
+<ol class="steps">
+  <li><div class="step-n">1</div><div class="step-text">Selecciona el <strong>Modo</strong>: Libre, Rural, Cale o Estacionamiento.</div></li>
+  <li><div class="step-n">2</div><div class="step-text">Selecciona el <strong>Clima</strong>: Día, Noche o Lluvia.</div></li>
+  <li><div class="step-n">3</div><div class="step-text">El botón <strong>INICIAR</strong> se activa solo cuando hayas elegido ambas opciones.</div></li>
+  <li><div class="step-n">4</div><div class="step-text">Presiona <strong>INICIAR</strong> para comenzar.</div></li>
+</ol>
+
+<div class="table-wrap"><table>
+  <thead><tr><th>Clima</th><th>Descripción</th><th>Dificultad</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Día</strong></td><td>Iluminación normal, visibilidad completa</td><td>Básico</td></tr>
+    <tr><td><strong>Noche</strong></td><td>Iluminación reducida, farolas encendidas</td><td>Intermedio</td></tr>
+    <tr><td><strong>Lluvia</strong></td><td>Precipitación con efectos visuales</td><td>Avanzado</td></tr>
+  </tbody>
+</table></div>
+
+<div class="alert alert-ok">
+  <div class="alert-sym">→</div>
+  <div class="alert-text"><strong>Recomendación para principiantes:</strong> Empieza con Modo Libre + Clima Día para familiarizarte con los controles antes de agregar dificultad adicional.</div>
+</div>
+
+</div>
+</div>
+</div>
+
+
+<!-- S5 -->
+<div class="page-wrap" id="s5">
+<div class="page">
+<div class="page-top"></div>
+<div class="page-header">
+  <div class="page-num-block">
+    <span class="page-num-tag">Sección 05</span>
+    <div class="page-title">Controles — Teclado y Logitech G27</div>
+    <div class="page-subtitle">Sistema de marchas, embrague y todas las teclas del simulador</div>
+  </div>
+</div>
+<div class="page-body">
+
+<div class="key-section">
+  <div class="key-group">
+    <div class="key-group-header">Teclado</div>
+    <div class="key-row"><kbd>W</kbd> / <kbd>↑</kbd><div class="desc">Acelerar</div></div>
+    <div class="key-row"><kbd>S</kbd> / <kbd>↓</kbd><div class="desc">Frenar</div></div>
+    <div class="key-row"><kbd>A</kbd> / <kbd>D</kbd><div class="desc">Dirección izq / der</div></div>
+    <div class="key-row"><kbd>E</kbd><div class="desc">Encender / Apagar motor</div></div>
+    <div class="key-row"><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd> <kbd>5</kbd><div class="desc">Marchas 1ª a 5ª</div></div>
+    <div class="key-row"><kbd>R</kbd><div class="desc">Reversa</div></div>
+    <div class="key-row"><kbd>N</kbd><div class="desc">Neutro</div></div>
+    <div class="key-row"><kbd>Q</kbd><div class="desc">Intermitente izquierda</div></div>
+    <div class="key-row"><kbd>O</kbd><div class="desc">Intermitente derecha</div></div>
+    <div class="key-row"><kbd>P</kbd><div class="desc">Pausar / Reanudar</div></div>
+    <div class="key-row"><kbd>T</kbd><div class="desc">Finalizar (estacionamiento)</div></div>
+  </div>
+  <div class="key-group">
+    <div class="key-group-header">Logitech G27</div>
+    <div class="key-row"><kbd>Volante</kbd><div class="desc">Dirección del vehículo</div></div>
+    <div class="key-row"><kbd>Pedal Gas</kbd><div class="desc">Acelerar</div></div>
+    <div class="key-row"><kbd>Pedal Freno</kbd><div class="desc">Frenar</div></div>
+    <div class="key-row"><kbd>Pedal Embrague</kbd><div class="desc">Clutch analógico (Slider)</div></div>
+    <div class="key-row"><kbd>Palanca 1–5</kbd><div class="desc">Marchas 1ª a 5ª</div></div>
+    <div class="key-row"><kbd>Palanca R</kbd><div class="desc">Reversa</div></div>
+    <div class="key-row"><kbd>Btn 4</kbd><div class="desc">Intermitente derecha</div></div>
+    <div class="key-row"><kbd>Btn 5</kbd><div class="desc">Intermitente izquierda</div></div>
+  </div>
+</div>
+
+<hr class="div">
+
+<h3>Sistema de Marchas</h3>
+<div class="gear-grid">
+  <div class="gear-box neut"><div class="gear-n">N</div><div class="gear-sp">Neutro</div><div class="gear-key">N</div></div>
+  <div class="gear-box fwd"><div class="gear-n">1</div><div class="gear-sp">máx 20 km/h</div><div class="gear-key">1</div></div>
+  <div class="gear-box fwd"><div class="gear-n">2</div><div class="gear-sp">máx 35 km/h</div><div class="gear-key">2</div></div>
+  <div class="gear-box fwd"><div class="gear-n">3</div><div class="gear-sp">máx 50 km/h</div><div class="gear-key">3</div></div>
+  <div class="gear-box fwd"><div class="gear-n">4</div><div class="gear-sp">máx 80 km/h</div><div class="gear-key">4</div></div>
+  <div class="gear-box fwd"><div class="gear-n">5</div><div class="gear-sp">máx 90 km/h</div><div class="gear-key">5</div></div>
+  <div class="gear-box rev"><div class="gear-n">R</div><div class="gear-sp">Reversa</div><div class="gear-key">R</div></div>
+</div>
+
+<h3>Cómo arrancar el carro</h3>
+<ol class="steps">
+  <li><div class="step-n">1</div><div class="step-text">Estar en <strong>Neutro</strong> — tecla <kbd>N</kbd>.</div></li>
+  <li><div class="step-n">2</div><div class="step-text">Presionar <kbd>E</kbd> para <strong>encender el motor</strong>.</div></li>
+  <li><div class="step-n">3</div><div class="step-text"><strong>Pisar el embrague (clutch) completamente</strong> — pedal izquierdo en G27, automático en teclado.</div></li>
+  <li><div class="step-n">4</div><div class="step-text">Meter <strong>primera marcha</strong> — tecla <kbd>1</kbd> o palanca pos. 1 en G27.</div></li>
+  <li><div class="step-n">5</div><div class="step-text">Soltar el clutch <strong>gradualmente</strong> mientras presionas el acelerador suavemente.</div></li>
+</ol>
+
+<h3>Uso correcto del embrague (clutch)</h3>
+<div class="alert alert-info">
+  <div class="alert-sym">i</div>
+  <div class="alert-text"><strong>Regla del clutch:</strong> Para cambiar a cualquier marcha — incluyendo Reversa — siempre debes <strong>pisar el clutch primero</strong>. No presiones R directamente sin embrague. El orden es siempre: Clutch → Marcha → Soltar clutch despacio.</div>
+</div>
+
+<div class="table-wrap"><table>
+  <thead><tr><th>Acción</th><th>Procedimiento correcto</th><th>Error que cala el motor</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Arrancar</strong></td><td>N → Motor (E) → Clutch → 1ª → Soltar clutch despacio</td><td>Meter 1ª sin clutch</td></tr>
+    <tr><td><strong>Subir marcha</strong></td><td>Clutch → nueva marcha → Soltar clutch acelerando</td><td>Cambiar sin clutch a baja velocidad</td></tr>
+    <tr><td><strong>Reversa</strong></td><td>Frenar hasta parar → Clutch → R → Soltar clutch despacio</td><td>Presionar R directo sin clutch</td></tr>
+    <tr><td><strong>Detenerse</strong></td><td>Frenar → Clutch → Neutro → Soltar freno</td><td>Frenar con marcha sin clutch</td></tr>
+  </tbody>
+</table></div>
+
+<h3>Uso de los intermitentes</h3>
+<p>Los intermitentes funcionan como <strong>interruptores (toggle)</strong>: presionas una vez para activar, otra vez para apagar.</p>
+<div class="alert alert-warn">
+  <div class="alert-sym">!</div>
+  <div class="alert-text"><strong>No olvides apagarlos.</strong> Si los dejas más de <strong>7 segundos</strong> encendidos sin necesidad, recibirás alerta y una penalización de <strong>–5 puntos</strong>. Apágalos inmediatamente después de cada giro.</div>
+</div>
+
+</div>
+</div>
+</div>
+
+
+<!-- S6 -->
+<div class="page-wrap" id="s6">
+<div class="page">
+<div class="page-top"></div>
+<div class="page-header">
+  <div class="page-num-block">
+    <span class="page-num-tag">Sección 06</span>
+    <div class="page-title">Modo Libre</div>
+    <div class="page-subtitle">Conducción por la ciudad — 3 puntos de inicio, evaluación completa</div>
+  </div>
+</div>
+<div class="page-body">
+
+<p>Navega libremente por el entorno urbano 3D. Sin ruta obligatoria — el objetivo es llegar a la <strong>zona de finalización</strong> respetando todas las normas. Se evalúan todas las infracciones posibles.</p>
+
+<h3>Puntos de inicio — Spawns</h3>
+<p>El simulador coloca el carro en uno de <strong>3 puntos que se alternan en orden</strong>. Cada conductor experimenta todos los puntos de forma equitativa.</p>
+
+<div class="img-grid-3">
+  <div>
+    <img src="img_docs/libre_spawn1.png.png" alt="Spawn 1">
+    <div class="img-caption" style="text-align:center;margin-top:6px;">SPAWN 1 — Zona central</div>
+  </div>
+  <div>
+    <img src="img_docs/libre_spawn2.png.png" alt="Spawn 2">
+    <div class="img-caption" style="text-align:center;margin-top:6px;">SPAWN 2 — Sector alt.</div>
+  </div>
+  <div>
+    <img src="img_docs/libre_spawn3.png.png" alt="Spawn 3">
+    <div class="img-caption" style="text-align:center;margin-top:6px;">SPAWN 3 — Zona periférica</div>
+  </div>
+</div>
+
+<h3>Cómo completar el Modo Libre</h3>
+<ol class="steps">
+  <li><div class="step-n">1</div><div class="step-text">Enciende el motor con <kbd>E</kbd>, mete primera marcha y arranca con precaución.</div></li>
+  <li><div class="step-n">2</div><div class="step-text">Conduce respetando <strong>semáforos, límites de velocidad, señales, carril</strong> e intermitentes en cada giro.</div></li>
+  <li><div class="step-n">3</div><div class="step-text">Cada infracción genera una alerta y descuenta puntos automáticamente.</div></li>
+  <li><div class="step-n">4</div><div class="step-text">Llega a la <strong>zona de finalización</strong> (partículas verdes en el suelo) y detén el vehículo completamente.</div></li>
+  <li><div class="step-n">5</div><div class="step-text">El panel de resultados aparece al detectar velocidad cero dentro de la zona.</div></li>
+</ol>
+
+<div class="table-wrap"><table>
+  <thead><tr><th>Infracción frecuente</th><th>Puntos</th><th>Cómo evitarla</th></tr></thead>
+  <tbody>
+    <tr><td>Velocidad excesiva</td><td>–10 cada 3s</td><td>Respetar señales de velocidad máxima</td></tr>
+    <tr><td>Semáforo en rojo</td><td>–15</td><td>Reducir al acercarse a semáforos</td></tr>
+    <tr><td>Sin intermitente al girar</td><td>–5</td><td>Activar antes de cada giro</td></tr>
+    <tr><td>Motor calado</td><td>–5</td><td>Usar clutch al cambiar marcha o detenerse</td></tr>
+    <tr><td>Intermitente olvidada</td><td>–5</td><td>Apagar justo después del giro</td></tr>
+  </tbody>
+</table></div>
+
+</div>
+</div>
+</div>
+
+
+<!-- S7 -->
+<div class="page-wrap" id="s7">
+<div class="page">
+<div class="page-top"></div>
+<div class="page-header">
+  <div class="page-num-block">
+    <span class="page-num-tag">Sección 07</span>
+    <div class="page-title">Modo Rural</div>
+    <div class="page-subtitle">Carretera interurbana — velocidades altas, tráfico pesado</div>
+  </div>
+</div>
+<div class="page-body">
+
+<div class="img-block">
+  <img src="img_docs/rural.png.png" alt="Modo Rural">
+  <div class="img-caption">MODO RURAL — Carretera de doble carril con tráfico pesado. Spawn: (–283.06, –0.43, 1245.42)</div>
+</div>
+
+<ol class="steps">
+  <li><div class="step-n">1</div><div class="step-text">Arranca y sube a marchas altas (3ª / 4ª) para alcanzar velocidad de crucero.</div></li>
+  <li><div class="step-n">2</div><div class="step-text">Mantente siempre en el <strong>carril derecho</strong>. El izquierdo es solo para adelantar donde esté permitido.</div></li>
+  <li><div class="step-n">3</div><div class="step-text">Respeta los <strong>límites de velocidad</strong> en las señales de la carretera.</div></li>
+  <li><div class="step-n">4</div><div class="step-text"><strong>No adelantes en zonas con línea continua</strong> — hay detector activo de adelantamiento prohibido.</div></li>
+  <li><div class="step-n">5</div><div class="step-text">Mantén <strong>distancia segura</strong> con los vehículos de adelante, especialmente camiones.</div></li>
+  <li><div class="step-n">6</div><div class="step-text">Al llegar a la zona de finalización, reduce velocidad y detén el vehículo.</div></li>
+</ol>
+
+<div class="alert alert-warn">
+  <div class="alert-sym">!</div>
+  <div class="alert-text"><strong>Tráfico pesado:</strong> En modo Rural hay camiones que circulan a alta velocidad. Mantén distancia segura y no adelantes en zonas con línea continua.</div>
+</div>
+
+</div>
+</div>
+</div>
+
+
+<!-- S8 -->
+<div class="page-wrap" id="s8">
+<div class="page">
+<div class="page-top"></div>
+<div class="page-header">
+  <div class="page-num-block">
+    <span class="page-num-tag">Sección 08</span>
+    <div class="page-title">Modo Cale</div>
+    <div class="page-subtitle">Ciudad con tráfico activo, semáforos, peatones y señales</div>
+  </div>
+</div>
+<div class="page-body">
+
+<div class="img-block">
+  <img src="img_docs/modocale.png.png" alt="Modo Cale">
+  <div class="img-caption">MODO CALI — Zona urbana de inicio con conos de señalización y tráfico activo</div>
+</div>
+
+<p>El modo más exigente. Circula por calles urbanas con <strong>tráfico IA completo</strong>: vehículos autónomos, peatones en movimiento, semáforos activos, conos y reductores de velocidad. Requiere máxima atención.</p>
+
+<ol class="steps">
+  <li><div class="step-n">1</div><div class="step-text">Arranca con precaución — hay tráfico desde el primer segundo. Usa los espejos retrovisores.</div></li>
+  <li><div class="step-n">2</div><div class="step-text"><strong>Obedece todos los semáforos.</strong> Pasar en rojo descuenta –15 puntos.</div></li>
+  <li><div class="step-n">3</div><div class="step-text"><strong>Cede el paso a peatones</strong> en cruces peatonales. Atropellar descuenta –15 puntos.</div></li>
+  <li><div class="step-n">4</div><div class="step-text"><strong>Reduce velocidad en los topes</strong> (reductores). Pasarlos rápido descuenta –10 puntos.</div></li>
+  <li><div class="step-n">5</div><div class="step-text">Usa intermitente en cada giro. Mantén el carril correcto.</div></li>
+  <li><div class="step-n">6</div><div class="step-text">Esquiva los conos — chocarlos descuenta –3 puntos cada uno.</div></li>
+  <li><div class="step-n">7</div><div class="step-text">Llega a la zona de finalización y detén el vehículo.</div></li>
+</ol>
+
+<div class="alert alert-danger">
+  <div class="alert-sym">!</div>
+  <div class="alert-text"><strong>Peatones autónomos:</strong> Se mueven de forma independiente y pueden cruzar de improviso. Ir despacio en zonas peatonales es fundamental — atropellar es la penalización más grave del modo.</div>
+</div>
+
+</div>
+</div>
+</div>
+
+
+<!-- S9 -->
+<div class="page-wrap" id="s9">
+<div class="page">
+<div class="page-top"></div>
+<div class="page-header">
+  <div class="page-num-block">
+    <span class="page-num-tag">Sección 09</span>
+    <div class="page-title">Modo Estacionamiento</div>
+    <div class="page-subtitle">Maniobras de parqueo — paralelo y reversa</div>
+  </div>
+</div>
+<div class="page-body">
+
+<div class="img-grid-2">
+  <div>
+    <img src="img_docs/parqueo_zona.png.png" alt="Zona de parqueo" style="height:220px;">
+    <div class="img-caption" style="margin-top:6px;">VISTA GENERAL — zona de estacionamiento</div>
+  </div>
+  <div>
+    <img src="img_docs/parqueo_paralelo.png.png" alt="Parqueo paralelo" style="height:220px;">
+    <div class="img-caption" style="margin-top:6px;">SPAWN 1 — espacio de parqueo paralelo</div>
+  </div>
+</div>
+
+<div class="alert alert-info">
+  <div class="alert-sym">i</div>
+  <div class="alert-text"><strong>Dos variantes que se alternan:</strong> Primera vez → parqueo paralelo (Spawn 1). Segunda vez → estacionamiento en reversa (Spawn 2). Al presionar Reiniciar, se repite la misma variante.</div>
+</div>
+
+<h3>Variante 1 — Parqueo Paralelo</h3>
+<p>Estaciona dentro del espacio delimitado usando el mínimo de maniobras.</p>
+<div class="table-wrap"><table>
+  <thead><tr><th>Criterio</th><th>Descuento</th></tr></thead>
+  <tbody>
+    <tr><td>Límite delantero tocado</td><td>–20 pts</td></tr>
+    <tr><td>Límite trasero tocado</td><td>–20 pts</td></tr>
+    <tr><td>Límite lateral tocado</td><td>–20 pts</td></tr>
+    <tr><td>Más de 4 maniobras (cambios reversa/adelante)</td><td>–10 pts</td></tr>
+  </tbody>
+</table></div>
+
+<ol class="steps">
+  <li><div class="step-n">1</div><div class="step-text">Posiciona el carro paralelo al espacio, ligeramente adelantado al hueco.</div></li>
+  <li><div class="step-n">2</div><div class="step-text"><strong>Clutch → Reversa (R)</strong> → soltar clutch despacio → girar hacia el espacio.</div></li>
+  <li><div class="step-n">3</div><div class="step-text">Entra en <strong>máximo 4 maniobras</strong>. Cada cambio reversa↔adelante cuenta como 1.</div></li>
+  <li><div class="step-n">4</div><div class="step-text">Alinea el carro dentro del espacio <strong>sin tocar ningún límite</strong>.</div></li>
+  <li><div class="step-n">5</div><div class="step-text">Presiona <kbd>T</kbd> para finalizar y ver la evaluación.</div></li>
+</ol>
+
+<h3>Variante 2 — Estacionamiento en Reversa</h3>
+<p>Entra al espacio en reversa. Hay una <strong>zona invisible de peligro</strong> en el fondo — si la tocas, –30 puntos.</p>
+<ol class="steps">
+  <li><div class="step-n">1</div><div class="step-text"><strong>Clutch → Reversa (R)</strong> → entra lentamente al espacio.</div></li>
+  <li><div class="step-n">2</div><div class="step-text">Controla la dirección para quedar centrado.</div></li>
+  <li><div class="step-n">3</div><div class="step-text"><strong>No llegues demasiado al fondo</strong> — la zona invisible penaliza si la tocas.</div></li>
+  <li><div class="step-n">4</div><div class="step-text">Presiona <kbd>T</kbd> para finalizar.</div></li>
+</ol>
+
+</div>
+</div>
+</div>
+
+
+<!-- S10 -->
+<div class="page-wrap" id="s10">
+<div class="page">
+<div class="page-top"></div>
+<div class="page-header">
+  <div class="page-num-block">
+    <span class="page-num-tag">Sección 10</span>
+    <div class="page-title">Infracciones y Penalizaciones</div>
+    <div class="page-subtitle">Catálogo completo de todo lo que descuenta puntos</div>
+  </div>
+</div>
+<div class="page-body">
+
+<h3>Infracciones Graves</h3>
+<div class="inf-list">
+  <div class="inf-item"><div class="inf-sev grave"></div><div class="inf-name">Zona proximidad parqueo (reversa)</div><div class="inf-desc">Llegar demasiado al fondo del espacio de estacionamiento en reversa</div><div class="inf-pts pts-grave">–30</div></div>
+  <div class="inf-item"><div class="inf-sev grave"></div><div class="inf-name">Límite de parqueo tocado (c/u)</div><div class="inf-desc">Tocar borde delantero, trasero o lateral del espacio paralelo</div><div class="inf-pts pts-grave">–20</div></div>
+  <div class="inf-item"><div class="inf-sev grave"></div><div class="inf-name">Semáforo en rojo</div><div class="inf-desc">Cruzar una intersección con la luz roja encendida</div><div class="inf-pts pts-grave">–15</div></div>
+  <div class="inf-item"><div class="inf-sev grave"></div><div class="inf-name">Atropello de peatón</div><div class="inf-desc">Colisionar con un peatón que cruza la vía</div><div class="inf-pts pts-grave">–15</div></div>
+</div>
+
+<h3>Infracciones Medias</h3>
+<div class="inf-list">
+  <div class="inf-item"><div class="inf-sev media"></div><div class="inf-name">Velocidad excesiva</div><div class="inf-desc">Superar el límite de la zona (cada 3 segundos)</div><div class="inf-pts pts-media">–10</div></div>
+  <div class="inf-item"><div class="inf-sev media"></div><div class="inf-name">Tope a alta velocidad</div><div class="inf-desc">Pasar un reductor sin reducir suficientemente</div><div class="inf-pts pts-media">–10</div></div>
+  <div class="inf-item"><div class="inf-sev media"></div><div class="inf-name">Fuera de ruta</div><div class="inf-desc">Entrar a zonas no permitidas fuera de la vía válida</div><div class="inf-pts pts-media">–10</div></div>
+  <div class="inf-item"><div class="inf-sev media"></div><div class="inf-name">Maniobras extra en parqueo</div><div class="inf-desc">Más de 4 cambios reversa/adelante en el parqueo paralelo</div><div class="inf-pts pts-media">–10</div></div>
+</div>
+
+<h3>Infracciones Leves</h3>
+<div class="inf-list">
+  <div class="inf-item"><div class="inf-sev leve"></div><div class="inf-name">Choque con objeto</div><div class="inf-desc">Colisionar con otro vehículo u objeto del entorno</div><div class="inf-pts pts-leve">–5</div></div>
+  <div class="inf-item"><div class="inf-sev leve"></div><div class="inf-name">Carril contrario</div><div class="inf-desc">Invadir el carril opuesto durante más de 3 segundos</div><div class="inf-pts pts-leve">–5</div></div>
+  <div class="inf-item"><div class="inf-sev leve"></div><div class="inf-name">Sin intermitente en giro</div><div class="inf-desc">Girar en intersección sin usar los intermitentes</div><div class="inf-pts pts-leve">–5</div></div>
+  <div class="inf-item"><div class="inf-sev leve"></div><div class="inf-name">Intermitente olvidada (+7 s)</div><div class="inf-desc">Dejar intermitente encendida más de 7 segundos sin necesidad</div><div class="inf-pts pts-leve">–5</div></div>
+  <div class="inf-item"><div class="inf-sev leve"></div><div class="inf-name">Motor calado</div><div class="inf-desc">Calar el motor por cambio incorrecto o falta de clutch</div><div class="inf-pts pts-leve">–5</div></div>
+  <div class="inf-item"><div class="inf-sev leve"></div><div class="inf-name">Adelantamiento prohibido</div><div class="inf-desc">Adelantar en zonas con línea continua o doble línea</div><div class="inf-pts pts-leve">–5</div></div>
+</div>
+
+<h3>Infracciones Menores</h3>
+<div class="inf-list">
+  <div class="inf-item"><div class="inf-sev menor"></div><div class="inf-name">Choque con cono</div><div class="inf-desc">Golpear un cono de señalización vial</div><div class="inf-pts pts-menor">–3</div></div>
+</div>
+
+</div>
+</div>
+</div>
+
+
+<!-- S11 -->
+<div class="page-wrap" id="s11">
+<div class="page">
+<div class="page-top"></div>
+<div class="page-header">
+  <div class="page-num-block">
+    <span class="page-num-tag">Sección 11</span>
+    <div class="page-title">Tu Puntaje y Calificación</div>
+    <div class="page-subtitle">Cómo se calcula tu nota final</div>
+  </div>
+</div>
+<div class="page-body">
+
+<p>Todos los modos inician con <strong>100 puntos</strong>. Cada infracción descuenta puntos. El puntaje nunca baja de 0. Al finalizar, se asigna la calificación según el puntaje final.</p>
+
+<div class="score-grid">
+  <div class="score-card s-excelente">
+    <div class="score-top">
+      <div class="score-range-n">90–100</div>
+      <div><div class="score-range-label">Excelente</div></div>
+    </div>
+    <div class="score-desc">Conducción ejemplar. Candidato apto con distinción.</div>
+  </div>
+  <div class="score-card s-bueno">
+    <div class="score-top">
+      <div class="score-range-n">70–89</div>
+      <div><div class="score-range-label">Bueno</div></div>
+    </div>
+    <div class="score-desc">Conducción aceptable. Candidato apto para licencia.</div>
+  </div>
+  <div class="score-card s-regular">
+    <div class="score-top">
+      <div class="score-range-n">50–69</div>
+      <div><div class="score-range-label">Regular</div></div>
+    </div>
+    <div class="score-desc">Requiere más práctica. Se recomienda repetir la prueba.</div>
+  </div>
+  <div class="score-card s-def">
+    <div class="score-top">
+      <div class="score-range-n">0–49</div>
+      <div><div class="score-range-label">Deficiente</div></div>
+    </div>
+    <div class="score-desc">No apto. Múltiples infracciones graves cometidas.</div>
+  </div>
+</div>
+
+<h3>Ejemplo de sesión</h3>
+<div class="table-wrap"><table>
+  <thead><tr><th>Evento</th><th>Descuento</th><th>Puntaje</th></tr></thead>
+  <tbody>
+    <tr><td>Inicio de prueba</td><td>—</td><td><strong>100 pts</strong></td></tr>
+    <tr><td>Motor calado (×2)</td><td>–10</td><td>90 pts</td></tr>
+    <tr><td>Sin intermitente (×1)</td><td>–5</td><td>85 pts</td></tr>
+    <tr><td>Velocidad excesiva (×1)</td><td>–10</td><td>75 pts</td></tr>
+    <tr><td>Choque con cono (×1)</td><td>–3</td><td>72 pts</td></tr>
+    <tr><td><strong>Resultado final</strong></td><td>—</td><td><strong>72 → Bueno</strong></td></tr>
+  </tbody>
+</table></div>
+
+<div class="alert alert-info">
+  <div class="alert-sym">i</div>
+  <div class="alert-text"><strong>Los resultados se guardan automáticamente</strong> al finalizar la prueba. Tu instructor puede ver el puntaje, la calificación, el modo, el clima y cada infracción cometida.</div>
+</div>
+
+</div>
+</div>
+</div>
+
+
+<!-- S12 -->
+<div class="page-wrap" id="s12">
+<div class="page">
+<div class="page-top"></div>
+<div class="page-header">
+  <div class="page-num-block">
+    <span class="page-num-tag">Sección 12</span>
+    <div class="page-title">Consejos para Mejorar</div>
+    <div class="page-subtitle">Estrategias para alcanzar la calificación Excelente</div>
+  </div>
+</div>
+<div class="page-body">
+
+<h3>Antes de arrancar</h3>
+<ul class="checklist">
+  <li>Tómate unos segundos para orientarte — fíjate en la dirección y el entorno cercano.</li>
+  <li>Verifica que estás en <strong>Neutro</strong> antes de encender el motor con <kbd>E</kbd>.</li>
+  <li>Si usas G27, verifica que todos los pedales respondan antes de mover el carro.</li>
+</ul>
+
+<h3>Durante la conducción</h3>
+<ul class="checklist">
+  <li><strong>Anticípate a los semáforos</strong> — reduce velocidad cuando veas uno en verde lejano.</li>
+  <li>Activa el intermitente <strong>antes</strong> de llegar a la intersección, no durante el giro.</li>
+  <li>Apaga el intermitente <strong>de inmediato</strong> después de completar el giro.</li>
+  <li>Usa marchas acordes a la velocidad — <strong>clutch siempre al cambiar</strong>.</li>
+  <li>En Modo Cale, ve despacio en zonas de obra (conos) y cruces peatonales.</li>
+</ul>
+
+<h3>En el estacionamiento</h3>
+<ul class="checklist">
+  <li>Planifica la maniobra antes de comenzar — visualiza el espacio y el ángulo.</li>
+  <li>Entra con el mínimo de maniobras posible — máximo 4 cambios reversa/adelante.</li>
+  <li>Ve muy despacio — precisión es más importante que velocidad.</li>
+  <li>En reversa, entra lentamente y detente antes de tocar el fondo.</li>
+</ul>
+
+<div class="alert alert-ok">
+  <div class="alert-sym">→</div>
+  <div class="alert-text"><strong>Para lograr Excelente (90–100):</strong> No cales el motor, siempre usa intermitentes, respeta semáforos y ve a velocidad adecuada. Cometer solo 1 infracción leve de –5 pts te deja en 95.</div>
+</div>
+
+<h3>Prioridades al conducir</h3>
+<div class="table-wrap"><table>
+  <thead><tr><th>Prioridad</th><th>Acción</th><th>Razón</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Alta</strong></td><td>Respetar semáforos y peatones</td><td>–15 pts cada vez, las más graves</td></tr>
+    <tr><td><strong>Media-alta</strong></td><td>Respetar límites de velocidad</td><td>–10 pts cada 3 seg, se acumula rápido</td></tr>
+    <tr><td><strong>Media</strong></td><td>Usar intermitentes en giros</td><td>–5 pts por giro sin señalizar</td></tr>
+    <tr><td><strong>Normal</strong></td><td>No calar el motor</td><td>–5 pts, evitable con práctica</td></tr>
+    <tr><td><strong>Baja</strong></td><td>Evitar conos</td><td>–3 pts, menor impacto</td></tr>
+  </tbody>
+</table></div>
+
+</div>
+</div>
+</div>
+
+
+<!-- S13 -->
+<div class="page-wrap" id="s13">
+<div class="page">
+<div class="page-top"></div>
+<div class="page-header">
+  <div class="page-num-block">
+    <span class="page-num-tag">Sección 13</span>
+    <div class="page-title">Preguntas Frecuentes</div>
+    <div class="page-subtitle">Respuestas a las dudas más comunes</div>
+  </div>
+</div>
+<div class="page-body">
+
+<div class="faq-item">
+  <div class="faq-q"><div class="faq-q-mark">P</div>El login tarda mucho tiempo. ¿El simulador está roto?</div>
+  <div class="faq-a"><div class="faq-a-mark">R</div>No. El servidor usa un plan gratuito en la nube que "se duerme" sin actividad. Al enviar la primera solicitud del día, puede tardar hasta 90 segundos en despertar. Es completamente normal. Los intentos siguientes son inmediatos.</div>
+</div>
+
+<div class="faq-item">
+  <div class="faq-q"><div class="faq-q-mark">P</div>Enciendo el motor pero el carro no avanza. ¿Qué hago?</div>
+  <div class="faq-a"><div class="faq-a-mark">R</div>Verifica el orden correcto: (1) Neutro con N, (2) Encender motor con E, (3) Pisar clutch completamente (G27), (4) Meter 1ª marcha con tecla 1, (5) Soltar clutch gradualmente mientras aceleras. Si el motor se caló, vuélvelo a encender con E.</div>
+</div>
+
+<div class="faq-item">
+  <div class="faq-q"><div class="faq-q-mark">P</div>Recibo penalización por intermitente pero la apagué rápido.</div>
+  <div class="faq-a"><div class="faq-a-mark">R</div>El límite es 7 segundos desde que la activas. Si enciendes el intermitente y tardas más de 7 segundos en girar o apagarla, recibes –5 pts. Actívala justo antes del giro y apágala inmediatamente después.</div>
+</div>
+
+<div class="faq-item">
+  <div class="faq-q"><div class="faq-q-mark">P</div>¿En qué marcha debo estar según la velocidad?</div>
+  <div class="faq-a"><div class="faq-a-mark">R</div>1ª hasta 20 km/h — 2ª hasta 35 km/h — 3ª hasta 50 km/h — 4ª hasta 80 km/h — 5ª para más de 80 km/h. Si vas muy lento para la marcha que tienes, el motor se calará. El HUD muestra tu velocidad actual.</div>
+</div>
+
+<div class="faq-item">
+  <div class="faq-q"><div class="faq-q-mark">P</div>¿Puedo repetir un modo que ya hice?</div>
+  <div class="faq-a"><div class="faq-a-mark">R</div>Sí. Desde la pantalla de resultados el botón "Reiniciar" te coloca en el mismo spawn. También puedes volver al menú con "Salir" y elegir el mismo modo con el clima que quieras.</div>
+</div>
+
+<div class="faq-item">
+  <div class="faq-q"><div class="faq-q-mark">P</div>En el estacionamiento presioné T pero no pasó nada.</div>
+  <div class="faq-a"><div class="faq-a-mark">R</div>La tecla T solo funciona en Modo Estacionamiento — no en Libre, Rural ni Cale. Asegúrate de haber seleccionado ese modo en el menú.</div>
+</div>
+
+<div class="faq-item">
+  <div class="faq-q"><div class="faq-q-mark">P</div>¿Mis resultados se guardaron si cerré antes de tiempo?</div>
+  <div class="faq-a"><div class="faq-a-mark">R</div>Solo se guardan al completar la prueba y llegar a la pantalla de resultados. Si cerraste antes, la sesión quedó marcada como "Interrumpida". Siempre termina la prueba correctamente para asegurar el guardado.</div>
+</div>
+
+<div class="faq-item">
+  <div class="faq-q"><div class="faq-q-mark">P</div>El simulador va muy lento. ¿Qué puedo hacer?</div>
+  <div class="faq-a"><div class="faq-a-mark">R</div>Reduce la calidad gráfica en Unity: Edit → Project Settings → Quality → selecciona Medium o Low. También reduce la cantidad de vehículos NPC desde el Inspector del sistema de tráfico (UTS PRO).</div>
+</div>
+
+<div class="faq-item">
+  <div class="faq-q"><div class="faq-q-mark">P</div>El volante G27 no responde correctamente.</div>
+  <div class="faq-a"><div class="faq-a-mark">R</div>Conecta el G27 ANTES de abrir Unity. Luego verifica en Edit → Project Settings → Input Manager que los ejes HorizontalVolante, AceleradorVolante, FrenoVolante y Slider estén asignados al Joystick 1.</div>
+</div>
+
+</div>
+</div>
+</div>
+
+
+<!-- S14 -->
+<div class="page-wrap" id="s14">
+<div class="page">
+<div class="page-top"></div>
+<div class="page-header">
+  <div class="page-num-block">
+    <span class="page-num-tag">Sección 14</span>
+    <div class="page-title">Glosario</div>
+    <div class="page-subtitle">Definición de términos clave del simulador</div>
+  </div>
+</div>
+<div class="page-body">
+
+<div class="glosario">
+  <div class="glosario-item"><div class="glosario-term">Spawn</div><div class="glosario-def">Posición donde el carro aparece al inicio de cada modo. Cada modo tiene uno o más spawns que rotan de forma secuencial.</div></div>
+  <div class="glosario-item"><div class="glosario-term">Marcha / Cambio</div><div class="glosario-def">Posición de la caja de velocidades. De 1ª a 5ª aumenta la velocidad máxima. R es reversa, N es neutro.</div></div>
+  <div class="glosario-item"><div class="glosario-term">Clutch / Embrague</div><div class="glosario-def">Mecanismo que desconecta el motor de las ruedas para cambiar marchas sin calar. En G27 es el pedal izquierdo.</div></div>
+  <div class="glosario-item"><div class="glosario-term">Calar el motor</div><div class="glosario-def">Apagado accidental del motor por cambio incorrecto o sin clutch. Descuenta –5 pts. Se recupera encendiendo de nuevo con E.</div></div>
+  <div class="glosario-item"><div class="glosario-term">Intermitente</div><div class="glosario-def">Luz de señalización que indica la dirección del giro. Debe activarse antes y apagarse después de cada giro. Q = izquierda, O = derecha.</div></div>
+  <div class="glosario-item"><div class="glosario-term">Tope / Reductor</div><div class="glosario-def">Elevación en la calzada que obliga a reducir velocidad. Cruzarlo rápido descuenta –10 pts.</div></div>
+  <div class="glosario-item"><div class="glosario-term">Zona de finalización</div><div class="glosario-def">Área marcada con partículas verdes donde el conductor debe detenerse para completar la prueba en Libre, Rural y Cale.</div></div>
+  <div class="glosario-item"><div class="glosario-term">Puntaje</div><div class="glosario-def">Valor de 0 a 100 que refleja el desempeño. Inicia en 100 y se reduce con cada infracción.</div></div>
+  <div class="glosario-item"><div class="glosario-term">Calificación</div><div class="glosario-def">Evaluación cualitativa del puntaje: Excelente (90–100), Bueno (70–89), Regular (50–69), Deficiente (0–49).</div></div>
+  <div class="glosario-item"><div class="glosario-term">HUD</div><div class="glosario-def">Información en pantalla durante la conducción: velocidad, puntaje y alertas de infracciones.</div></div>
+  <div class="glosario-item"><div class="glosario-term">UTS PRO</div><div class="glosario-def">Sistema de tráfico con inteligencia artificial que controla los vehículos y peatones autónomos. No debe modificarse.</div></div>
+  <div class="glosario-item"><div class="glosario-term">Logitech G27</div><div class="glosario-def">Volante de conducción con pedales y palanca de cambios físicos compatible con el simulador.</div></div>
+  <div class="glosario-item"><div class="glosario-term">Supabase</div><div class="glosario-def">Base de datos en la nube donde se guardan todos los resultados e infracciones de cada sesión.</div></div>
+</div>
+
+</div>
+</div>
+</div>
+
+
+<!-- FOOTER -->
+<div class="footer-wrap">
+  <div class="footer">
+    <div class="footer-title">Simulador de Conducción CNN_FN</div>
+    <div style="display:flex;justify-content:center;gap:20px;flex-wrap:wrap;margin:12px 0;">
+      <span style="font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:rgba(255,255,255,0.6);">Nelson Barrera</span>
+      <span style="color:rgba(255,255,255,0.2);">·</span>
+      <span style="font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:rgba(255,255,255,0.6);">Julian Dorado</span>
+      <span style="color:rgba(255,255,255,0.2);">·</span>
+      <span style="font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:rgba(255,255,255,0.6);">Cristian Ruano</span>
+    </div>
+    <div class="footer-sub">Manual de Usuario · v1.0.0 · 2026 · Unity 2022 LTS · Express.js · Supabase</div>
+  </div>
+</div>
+
+</body>
+</html>
